@@ -113,7 +113,7 @@ Function interface_keyboardEntry(title as String, default as String, message as 
 
 End Function
 
-Function interface_listScreen(title as String, breadcrumb1 as String, breadcrumb2 as String, header as String, list as Dynamic) as Dynamic
+Function interface_listScreen(title as String, breadcrumb1 as String, breadcrumb2 as String, header as String, list as Dynamic, lastindex as integer) as Dynamic
 
   currentitemid = 0
   port = CreateObject("roMessagePort")
@@ -124,6 +124,9 @@ Function interface_listScreen(title as String, breadcrumb1 as String, breadcrumb
   screen.setBreadcrumbText(breadcrumb1, breadcrumb2)
   screen.SetContent(list)
   screen.Show()
+  if ( lastindex > 0 ) then
+    screen.SetFocusedListItem(lastindex)
+  end if
 
   while true
     msg = wait(0, screen.GetMessagePort())
@@ -165,6 +168,7 @@ Function interface_listScreen(title as String, breadcrumb1 as String, breadcrumb
       end if
       screen.Close()
       return {
+        lastindex : currentitemid
         action : action
         object : object
       }

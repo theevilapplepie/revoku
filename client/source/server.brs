@@ -184,7 +184,7 @@ Sub server_selectServer()
   while true
 
     ' Show screen and get response
-    result = interface_listScreen("Welcome, " + m.userGN, m.server, "Switch Server", "Switch Server", menulist)
+    result = interface_listScreen("Welcome, " + m.userGN, m.server, "Switch Server", "Switch Server", menulist, 0)
 
     if result.action = invalid OR result.action = "" then
       return
@@ -220,7 +220,7 @@ Sub server_mainMenu()
     }
   ]
   while true
-    result = interface_listScreen("Welcome, " + m.userGN, m.server, "Manage Servers", "Manage Servers", menulist)
+    result = interface_listScreen("Welcome, " + m.userGN, m.server, "Manage Servers", "Manage Servers", menulist, 0)
 
     if type(result) <> "roAssociativeArray" OR result.Title = "" then
       return
@@ -282,7 +282,7 @@ Sub server_deleteServer()
   while true
 
     ' Show screen and get response
-    result = interface_listScreen("Welcome, " + m.userGN, m.server, "Delete Server", "Delete Server", menulist)
+    result = interface_listScreen("Welcome, " + m.userGN, m.server, "Delete Server", "Delete Server", menulist, 0)
 
     if result.action = invalid OR result.action = "" then
       return
@@ -342,7 +342,7 @@ Sub server_browseShares()
   while true
 
     ' Show screen and get response
-    result = interface_listScreen("Welcome, " + m.userGN, m.server, "Browse Shares", "Browse Shares", menulist)
+    result = interface_listScreen("Welcome, " + m.userGN, m.server, "Browse Shares", "Browse Shares", menulist, 0)
 
     if result.action = invalid OR result.action = "" then
       return
@@ -435,7 +435,7 @@ Sub server_browsePath(stack as Dynamic)
     processingmodal.close()
 
     ' Show screen and get response
-    result = interface_listScreen("Welcome, " + m.userGN, m.server, stack[0], visiblepath, result)
+    result = interface_listScreen("Welcome, " + m.userGN, m.server, stack[0], visiblepath, result, 0)
 
     if result.action = invalid OR result.action = "" then
       return

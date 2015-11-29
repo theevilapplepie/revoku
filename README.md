@@ -6,6 +6,7 @@ Roku Streaming Client and Server
 * Easy to configure minimal backend ( Goal Met )
 * Video and Music Playback Support ( Only Video functional at this time )
 * Resume Video Playback from Last State ( Incomplete )
+* Continuous playback of Directory ( Incomplete )
 * Rating System ( Incomplete )
 * Server Side User Sessions for State Information and Rating Information ( Incomplete )
 * Search Feature ( Incomplete )

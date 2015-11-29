@@ -100,7 +100,7 @@ Sub mainMenu()
 
     }
   ]
-  result = interface_listScreen("Welcome, " + m.userGN, m.server, "Main Menu", "Main Menu", menulist)
+  result = interface_listScreen("Welcome, " + m.userGN, m.server, "Main Menu", "Main Menu", menulist, 0)
   if type(result) <> "roAssociativeArray" OR result.Title = "" then
     return
   end if
