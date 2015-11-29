@@ -52,7 +52,8 @@ function stream_hls_chunk($file,$time = "0.00",$subtitles=false) {
     }
   }
 
-  $command = $config_array['applications']['ffmpeg']." -ss ".$startfftime." -i \"".$file."\" -t ".$lengthfftime." $additonalffmpeg -c:v libx264 -preset ultrafast -f mpegts pipe:";
+
+  $command = $config_array['applications']['ffmpeg']." -noaccurate_seek -ss ".$startfftime." -i \"".$file."\" -force_key_frames \"expr:gte(t,n_forced*2)\" -t ".$lengthfftime." $additonalffmpeg -c:v libx264 -preset ultrafast -pix_fmt yuv420p -c:a mp3 -ss 0 -b:v ".$config_array['stream']['video_bitrate']." -b:a ".$config_array['stream']['audio_bitrate']." -r 30 -f mpegts pipe:";
   error_log("[Revoku][Debug] Running External Command: '$command'");
   passthru($command,$return_var);
 
