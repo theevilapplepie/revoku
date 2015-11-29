@@ -349,7 +349,7 @@ Sub server_browseShares()
     end if
 
     if result.action = "selected" OR result.action = "right" then
-      server_browsePath([result.object.Url])
+      server_browsePath(result.object.Url)
     end if
 
     if result.action = "back" OR result.action = "left" then
@@ -360,10 +360,14 @@ Sub server_browseShares()
 
 End Sub
 
-Sub server_browsePath(stack as Dynamic)
+Sub server_browsePath(share as String)
 
   ' Create object for urlencode
   urlobj = CreateObject("roUrlTransfer")
+
+  ' Create directorystacks
+  directorystack = [share]
+  selectedindexstack = [0]
 
   ' Event Loop
   while true
@@ -378,7 +382,7 @@ Sub server_browsePath(stack as Dynamic)
     menulist = []
     ' Create Path
     path = ""
-    for each pathcomponent in stack
+    for each pathcomponent in directorystack
       if path <> "" then
         path = path + "/"
       end if
@@ -420,31 +424,31 @@ Sub server_browsePath(stack as Dynamic)
 
     ' Create a "pretty path"
     visiblepath = ""
-    if stack.Count() > 1 then
-      for i=1 to ( stack.Count() - 1 )
+    if directorystack.Count() > 1 then
+      for i=1 to ( directorystack.Count() - 1 )
         if visiblepath <> "" then
           visiblepath = visiblepath + "/"
         end if
-        visiblepath = visiblepath + stack[i]
+        visiblepath = visiblepath + directorystack[i]
       end for
     else
-      visiblepath = stack[0]
+      visiblepath = directorystack[0]
     end if
 
     ' Close Modal
     processingmodal.close()
 
     ' Show screen and get response
-    result = interface_listScreen("Welcome, " + m.userGN, m.server, stack[0], visiblepath, result, 0)
+    result = interface_listScreen("Welcome, " + m.userGN, m.server, directorystack[0], visiblepath, result, 0)
 
     if result.action = invalid OR result.action = "" then
       return
     else if result.action = "selected" OR result.action = "right" then
       if result.object.type = "directory" then
-        stack.Push(result.object.url)
+        directorystack.Push(result.object.url)
       else if result.object.type = "audio" then
       else if result.object.type = "video" then
-        action = interface_displayVideoInfo(m.server, stack[0], path + "/" + result.object.Url)
+        action = interface_displayVideoInfo(m.server, directorystack[0], path + "/" + result.object.Url)
         if action = "play" then
           interface_displayVideo(result.object.Title, path + "/" + result.object.Url)
         end if
@@ -452,10 +456,10 @@ Sub server_browsePath(stack as Dynamic)
         interface_notifyDialog("Unknown FileType", "This type of file cannot be played.")
       end if
     else if result.action = "back" OR result.action = "left" then
-      if ( stack.Count() = 1 ) then
+      if ( directorystack.Count() = 1 ) then
         return
       end if
-      stack.Pop()
+      directorystack.Pop()
     end if
 
   end while
