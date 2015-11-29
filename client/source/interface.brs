@@ -113,7 +113,17 @@ Function interface_keyboardEntry(title as String, default as String, message as 
 
 End Function
 
-Function interface_listScreen(title as String, breadcrumb1 as String, breadcrumb2 as String, header as String, list as Dynamic, lastindex as integer) as Dynamic
+Function interface_listScreen(title as String, breadcrumb1 as String, breadcrumb2 as String, header as String, list as Dynamic, lastindex as dynamic) as Dynamic
+
+  ' Fix lastindex
+  if lastindex = invalid then
+    lastindex = 0
+  else if Type(lastindex) <> "Integer" AND Type(lastindex) <> "roInteger" then
+    lastindex = strtoi(lastindex)
+  end if
+
+  print "CALLED WITH LASTINDEX"
+  print lastindex
 
   currentitemid = 0
   port = CreateObject("roMessagePort")
@@ -168,7 +178,7 @@ Function interface_listScreen(title as String, breadcrumb1 as String, breadcrumb
       end if
       screen.Close()
       return {
-        lastindex : currentitemid
+        index : currentitemid
         action : action
         object : object
       }

@@ -365,7 +365,7 @@ Sub server_browsePath(share as String)
   ' Create object for urlencode
   urlobj = CreateObject("roUrlTransfer")
 
-  ' Create directorystacks
+  ' Create stacks
   directorystack = [share]
   selectedindexstack = [0]
 
@@ -439,13 +439,15 @@ Sub server_browsePath(share as String)
     processingmodal.close()
 
     ' Show screen and get response
-    result = interface_listScreen("Welcome, " + m.userGN, m.server, directorystack[0], visiblepath, result, 0)
+    result = interface_listScreen("Welcome, " + m.userGN, m.server, directorystack[0], visiblepath, result, selectedindexstack[(selectedindexstack.Count() - 1)])
 
     if result.action = invalid OR result.action = "" then
       return
     else if result.action = "selected" OR result.action = "right" then
       if result.object.type = "directory" then
         directorystack.Push(result.object.url)
+        selectedindexstack[(selectedindexstack.Count() - 1)] = result.index
+        selectedindexstack.Push(0)
       else if result.object.type = "audio" then
       else if result.object.type = "video" then
         action = interface_displayVideoInfo(m.server, directorystack[0], path + "/" + result.object.Url)
@@ -460,6 +462,7 @@ Sub server_browsePath(share as String)
         return
       end if
       directorystack.Pop()
+      selectedindexstack.Pop()
     end if
 
   end while
