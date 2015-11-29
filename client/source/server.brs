@@ -444,9 +444,9 @@ Sub server_browsePath(share as String)
     if result.action = invalid OR result.action = "" then
       return
     else if result.action = "selected" OR result.action = "right" then
+      selectedindexstack[(selectedindexstack.Count() - 1)] = result.index
       if result.object.type = "directory" then
         directorystack.Push(result.object.url)
-        selectedindexstack[(selectedindexstack.Count() - 1)] = result.index
         selectedindexstack.Push(0)
       else if result.object.type = "audio" then
       else if result.object.type = "video" then
