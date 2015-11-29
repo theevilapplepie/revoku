@@ -55,6 +55,12 @@ End Sub
 Sub mainMenu()
   menulist = [
     {
+      "Title" : "Recently Played"
+      "ShortDescriptionLine1" : "Recently Played"
+      "ShortDescriptionLine2" : "Quickly Resume or Re-Watch"
+      "HDPosterUrl" : "pkg:/images/video.png"
+    }
+    {
       "Title" : "Browse Shares"
       "ShortDescriptionLine1" : "Browse Shares"
       "ShortDescriptionLine2" : "Browse Media Shares on" + chr(10) + server_getCurrentServer()
