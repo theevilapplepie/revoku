@@ -5,10 +5,11 @@ Roku Streaming Client and Server
 ## Goals
 * Easy to configure minimal backend ( Goal Met )
 * Video and Music Playback Support ( Only Video functional at this time )
-* Resume Video Playback from Last State ( Incomplete )
+* Resume Video Playback from Last State ( In Progress )
 * Continuous playback of Directory ( Incomplete )
 * Rating System ( Incomplete )
-* Server Side User Sessions for State Information and Rating Information ( Incomplete )
+* Server Side User Sessions for State Information and Rating Information ( In Progress )
+* Recently Played feature on Main Screen ( In Progress )
 * Search Feature ( Incomplete )
 * Music Visualizer ( Wishlist )
 * Syncronous Playback on Multiple Devices ( Wishlist )
