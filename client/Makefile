@@ -16,6 +16,6 @@
 #    Set in your this variable in your shell startup (e.g. .bashrc)
 ##########################################################################  
 APPNAME = revoku
-VERSION = 2.0
+VERSION = 1.0
 
 include ../app.mk

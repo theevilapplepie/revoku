@@ -34,13 +34,16 @@ Sub interface_notifyDialog(title as String, message as String)
       if type(dlgMsg) = "roMessageDialogEvent" then
         if dlgMsg.isButtonPressed() then
           if dlgMsg.GetIndex() = 1 then
+            dialog.Close()
             return
           end if
         else if dlgMsg.isScreenClosed()
-          return
+            dialog.Close()
+            return
         end if
       end if
     end while
+    dialog.Close()
 End Sub
 
 Function interface_confirmDialog(title as String, message as String) as Boolean
@@ -58,15 +61,19 @@ Function interface_confirmDialog(title as String, message as String) as Boolean
       if type(dlgMsg) = "roMessageDialogEvent" then
         if dlgMsg.isButtonPressed() then
           if dlgMsg.GetIndex() = 1 then
+            dialog.Close()
             return true
           else if dlgMsg.GetIndex() = 2 then
+            dialog.Close()
             return false
           end if
         else if dlgMsg.isScreenClosed()
+          dialog.Close()
           return false
         end if
       end if
     end while
+    dialog.Close()
 End Function
 
 Function interface_keyboardEntry(title as String, default as String, message as String) as Dynamic
@@ -88,11 +95,14 @@ Function interface_keyboardEntry(title as String, default as String, message as 
       print msg
       if type(msg) = "roKeyboardScreenEvent" then
         if msg.isScreenClosed() then
+          keyboardscreen.close()
           return invalid
         else if msg.isButtonPressed() then
           if msg.GetIndex() = 1 then
+            keyboardscreen.Close()
             return keyboardscreen.GetText()
           else if msg.GetIndex() = 2 then
+            keyboardscreen.Close()
             return invalid
           else
             print "Invalid Index"
@@ -153,7 +163,7 @@ Function interface_listScreen(title as String, breadcrumb1 as String, breadcrumb
       if type(list) = "roArray" then
         object = list[currentitemid]
       end if
-
+      screen.Close()
       return {
         action : action
         object : object
