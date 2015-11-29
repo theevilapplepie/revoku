@@ -211,6 +211,7 @@ Function interface_displayVideoInfo(breadcrumb1 as String, breadcrumb2 as String
     springBoard.AddButton(1,"Restart Video")
   else
     springBoard.AddButton(1,"Play Video")
+    springBoard.AddButton(3,"Directory Play - Start Here")
   end if
   while true
     springBoard.SetContent(metadata)
