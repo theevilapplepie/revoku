@@ -1,0 +1,4 @@
+* Provides the ability to add streaming servers from UI
+* Provides the ability to watch all files in order in a directory
+* Provides the ability to rate files
+* Provides the ability to resume watching from last state

@@ -1,0 +1,9 @@
+title=RevoKU
+subtitle=RevoKU Media Center
+mm_icon_focus_hd=pkg:/logos/MainMenu_Icon_Center_HD.png
+mm_icon_side_hd=pkg:/logos/MainMenu_Icon_Side_HD.png
+mm_icon_focus_sd=pkg:/logos/MainMenu_Icon_Center_SD43.png
+mm_icon_side_sd=pkg:/logos/MainMenu_Icon_Side_SD43.png
+splash_screen_hd=pkg:/logos/revoku_splash.png
+splash_screen_sd=pkg:/logos/revoku_splash.png
+spash_min_time=3000

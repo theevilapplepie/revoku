@@ -1,0 +1,48 @@
+<pathtorevokuapp>?action=serverinfo
+  Provides the name of the host and system metadata
+
+<pathtorevokuapp>?action=pathlist&path=<fullpath|shortname[/path]>
+  Provides a list of files and directories ( directories include metadata )
+
+<pathtorevokuapp>?action=fileinfo&path=<fullpath|shortname[/path]>
+  Provides file metadata such as tags 
+
+<pathtorevokuapp>?action=stream_hls_video&path=<fullpath|shortname[/path]>&time=<timeindex>&captions=<true|false>
+  Provides a HLS Video stream chunk
+  Captions are only used in this context when the media provides bitmap captions
+
+<pathtorevokuapp>?action=stream_hls_m3u8&path=<fullpath|shortname[/path]>
+  Provides the HLS video file
+
+<pathtorevokuapp>?action=stream_hls_caption&path=<fullpath|shortname[/path]>
+  Provides the HLS video caption file
+  This will only work when the media provides non-bitmap captions
+
+<pathtorevokuapp>?action=getlastposition&user=<username>&path=<fullpath|shortname[/path]>
+  Provides the last position a user was at when viewing a video stream
+
+<pathtorevokuapp>?action=setlastposition&user=<username>&path=<fullpath|shortname[/path]>[&position=<timeindex>]
+  Sets the last position a user was at when viewing a video stream
+  If timeindex is not specified, the last set timeindex is set to 0
+
+<pathtorevokuapp>?action=getlastwatched&user=<username>&path=<fullpath|shortname[/path]>
+  Provides the last time/date a user was viewing a video stream
+
+<pathtorevokuapp>?action=setlastwatched&user=<username>&path=<fullpath|shortname[/path]>
+  Sets the last time/date a user was viewing a video stream
+
+<pathtorevokuapp>?action=clearlastwatched&user=<username>&path=<fullpath|shortname[/path]>
+  Removes the last time/date a user was viewing a video stream
+
+<pathtorevokuapp>?action=createuser&user=<username>
+  Creates a User
+
+<pathtorevokuapp>?action=userinfo&user=<username>
+  Get User Information
+
+<pathtorevokuapp>?action=listusers
+  List Available Users
+
+<pathtorevokuapp>?action=deleteuser&user=<username>
+  Deletes User
+
