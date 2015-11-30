@@ -1,6 +1,11 @@
 <?php
 
-function _hls_generate_extif($duration, $time, $path){
+function _hls_generate_extif($duration, $time, $type, $path){
+  if ( $type == "audio" ) {
+    $action = "stream_hls_audio";
+  } elseif ( $type == "video" ) {
+    $action = "stream_hls_video";
+  }
   if ( !strpos($duration,'.') ) {
     $duration .= ".00";
   }
@@ -8,11 +13,10 @@ function _hls_generate_extif($duration, $time, $path){
     $time .= ".00";
   }
   echo "#EXTINF:".$duration.",\n";
-  echo "http://$_SERVER[HTTP_HOST]".strtok($_SERVER["REQUEST_URI"],'?')."?action=stream_hls_video&path=".urlencode($path)."&time=".$time."\n";
+  echo "http://$_SERVER[HTTP_HOST]".strtok($_SERVER["REQUEST_URI"],'?')."?action=$action&path=".urlencode($path)."&time=".$time."\n";
 }
 
-function stream_hls_chunk($file,$time = "0.00",$subtitles=false) {
-
+function stream_hls_audio($file,$time = "0.00") {
   global $config_array;
 
   $file = cleanpath($file);
@@ -33,7 +37,48 @@ function stream_hls_chunk($file,$time = "0.00",$subtitles=false) {
     $lengthfftime .= '.00';
   }
 
+  # Disable output bufferring
+  ob_end_flush();
 
+  header('Accept-Ranges: bytes');
+  header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($file)));
+  header('Content-type: audio/mpeg');
+
+  $command = $config_array['applications']['ffmpeg']." -ss ".$startfftime." -i \"".$file."\" -t ".$lengthfftime." -vcodec copy -vn -c:a mp3 -b:a ".$config_array['stream']['audio_bitrate']." -f mpegts pipe:";
+  error_log("[Revoku][Debug] Running External Command: '$command'");
+  passthru($command,$return_var);
+
+  if ( $return_var != 0 ) {
+    error_log("[Revoku] Error running FFMPEG, Error code $return_var!");
+    return false;
+  }
+
+  return true;
+}
+
+
+
+function stream_hls_video($file,$time = "0.00",$subtitles=false) {
+
+  global $config_array;
+
+  $file = cleanpath($file);
+
+  if ( !file_exists($file) ) {
+    error_log("[Revoku] Could not access file \"$file\"!");
+    return false;
+  }
+
+  $startfftime = gmdate("H:i:s",floatval($time));
+  $lengthfftime = gmdate("H:i:s",floatval($config_array['stream']['chunk_duration']));
+
+  # Convert Start to Float
+  if ( strpos($startfftime,'.') ) {
+    $startfftime .= '.00';
+  }
+  if ( strpos($lengthfftime,'.') ) {
+    $lengthfftime .= '.00';
+  }
 
   # Disable output bufferring
   ob_end_flush();
@@ -65,7 +110,7 @@ function stream_hls_chunk($file,$time = "0.00",$subtitles=false) {
   return true;
 }
 
-function stream_hls_m3u8($file) {
+function stream_hls_m3u8($file,$type = "video") {
 
   global $config_array;
 
@@ -111,11 +156,11 @@ function stream_hls_m3u8($file) {
 
   # Generate Streaming List
   for ($segment = 0; $segment <= $totalwholefiles; $segment++) {
-    _hls_generate_extif($config_array['stream']['chunk_duration'],($segment * $config_array['stream']['chunk_duration']),$file);
+    _hls_generate_extif($config_array['stream']['chunk_duration'],($segment * $config_array['stream']['chunk_duration']),$type,$file);
   }
 
   # Generate Remainder Streaming Item
-  _hls_generate_extif($remainingframeseconds,(($totalwholefiles + 1) * $config_array['stream']['chunk_duration']),$file);
+  _hls_generate_extif($remainingframeseconds,(($totalwholefiles + 1) * $config_array['stream']['chunk_duration']),$type,$file);
 
   # Generate End of List
   echo "#EXT-X-ENDLIST";

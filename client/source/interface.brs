@@ -194,7 +194,7 @@ Function interface_displayVideoInfo(breadcrumb1 as String, breadcrumb2 as String
   springBoard.SetMessagePort(port)
   springBoard.SetBreadcrumbText(breadcrumb1,breadcrumb2)
   ' Pull in data for the object :)
-  metadata = shared_getURLJSON(m.serverURL + "?action=fileinfo&path=" + urlobj.Escape(file))
+  metadata = shared_getURLJSON(m.serverURL + "?action=videoinfo&path=" + urlobj.Escape(file))
   if metadata = invalid then
     interface_notifyDialog("Server Error", "Unable to pull video metadata!")
   end if

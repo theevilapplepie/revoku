@@ -11,6 +11,7 @@ Roku Streaming Client and Server
 * Server Side User Sessions for State Information and Rating Information ( In Progress )
 * Recently Played feature on Main Screen ( In Progress )
 * Search Feature ( Incomplete )
+* Music Playback Shuffle ( Incomplete )
 * Local Media [ USB, Local FS ] Playback ( Wishlist )
 * Music Visualizer ( Wishlist )
 * Syncronous Playback on Multiple Devices ( Wishlist )

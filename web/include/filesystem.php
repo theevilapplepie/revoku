@@ -98,11 +98,59 @@ function pathList($path) {
   return true;
 }
 
-function fileInfo($file) {
+function videoinfo($file) {
   $pathinfo = pathinfo($file);
   $title = $pathinfo['filename'];
   $title = str_replace("_"," ",$title);
   $return['Title'] = $title;
   echo json_encode($return);
+  return true;
+}
+
+function audioinfo($file) {
+  global $config_array;
+
+  $currentpath = cleanpath($file);
+  if ( $currentpath === false ) {
+    error_log("[Revoku] pathList called and cleanpath returned false on input data");
+    return false;
+  }
+  $pathinfo = pathinfo($currentpath);
+  $title = $pathinfo['filename'];
+  $title = str_replace("_"," ",$title);
+
+  # Setup our Return Data
+  $returndata;
+  $returndata['Title'] = $title;
+
+  # We've got our basics, Lets get as much ID3 info as we can :)
+  exec($config_array['applications']['ffprobe']." -i \"$currentpath\" -v quiet -show_entries format -of csv=\"p=0\":\"nk=0\":\"s=|\"",$ffprobeoutput);
+  # Parse Data
+  $dataarray = explode("|",$ffprobeoutput[0]);
+  $filedata;
+  foreach($dataarray as $value) {
+    $data = explode("=", $value, 2);
+    $filedata[$data[0]] = $data[1];
+  }
+
+  # Lets start assignments
+  $assignments = Array(
+    'duration' => 'Length',
+    'probe_score' => 'UserStarRating',
+    'tag:title' => 'Title',
+    'tag:genre' => 'Categories',
+    'tag:album' => 'Album',
+    'tag:album_artist' => 'Artist',
+    'tag:artist' => 'Artist',
+  );
+
+  foreach ( $assignments as $fflabel => $destlabel ) {
+    if ( isset($filedata[$fflabel]) && $filedata[$fflabel] ) {
+      $returndata[$destlabel] = $filedata[$fflabel];
+    }
+  }
+
+  echo json_encode($returndata);
+
   return true;
 }

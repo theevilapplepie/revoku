@@ -449,6 +449,7 @@ Sub server_browsePath(share as String)
         directorystack.Push(result.object.url)
         selectedindexstack.Push(0)
       else if result.object.type = "audio" then
+        audioplayer_player(m.server, directorystack[0], path + "/" + result.object.Url)
       else if result.object.type = "video" then
         action = interface_displayVideoInfo(m.server, directorystack[0], path + "/" + result.object.Url)
         if action = "play" then
