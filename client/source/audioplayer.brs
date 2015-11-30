@@ -1,3 +1,50 @@
+Function audioplayer_displayVideo(title As string, filepath As dynamic) as Boolean
+    ' Create object for urlencode
+    urlobj = CreateObject("roUrlTransfer")
+
+    print "Displaying video: " + filepath
+    p = CreateObject("roMessagePort")
+    video = CreateObject("roVideoScreen")
+    video.setMessagePort(p)
+
+    bitrates  = [0]    
+    
+    videoclip = CreateObject("roAssociativeArray")
+    videoclip.StreamBitrates = bitrates
+    videoclip.StreamUrls = [m.serverURL + "?action=stream_hls_m3u8_audio&path=" + urlobj.Escape(filepath)]
+    videoclip.StreamQualities = "[HD]"
+    videoclip.StreamFormat = "hls"
+    videoclip.Title = title
+    
+    video.SetContent(videoclip)
+    video.show()
+
+    lastSavedPos   = 0
+    statusInterval = 5 'position must change by more than this number of seconds before saving
+
+    while true
+        msg = wait(0, video.GetMessagePort())
+        if type(msg) = "roVideoScreenEvent"
+            if msg.isScreenClosed() then 'ScreenClosed event
+                print "Closing video screen"
+                exit while
+            else if msg.isPlaybackPosition() then
+                nowpos = msg.GetIndex()
+                if nowpos > 0
+                    if abs(nowpos - lastSavedPos) > statusInterval
+                        ' Save the current position for the user to continue
+                        lastSavedPos = nowpos
+                    end if
+                end if
+            else if msg.isRequestFailed()
+                print "play failed: "; msg.GetMessage()
+            else
+                print "Unknown event: "; msg.GetType(); " msg: "; msg.GetMessage()
+            endif
+        end if
+    end while
+End Function
+
 Sub audioplayer_player(breadcrumb1 as String, breadcrumb2 as String, file as String)
 
   print "OMG FILE: " + file
