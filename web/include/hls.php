@@ -1,9 +1,7 @@
 <?php
 
 function _hls_generate_extif($duration, $time, $type, $path){
-  if ( $type == "audio" ) {
-    $action = "stream_hls_audio";
-  } elseif ( $type == "video" ) {
+  if ( $type == "video" ) {
     $action = "stream_hls_video";
   }
   if ( !strpos($duration,'.') ) {
@@ -15,51 +13,6 @@ function _hls_generate_extif($duration, $time, $type, $path){
   echo "#EXTINF:".$duration.",\n";
   echo "http://$_SERVER[HTTP_HOST]".strtok($_SERVER["REQUEST_URI"],'?')."?action=$action&path=".urlencode($path)."&time=".$time."\n";
 }
-
-function stream_hls_audio($file,$time = "0.00") {
-  global $config_array;
-
-  $file = cleanpath($file);
-
-  if ( !file_exists($file) ) {
-    error_log("[Revoku] Could not access file \"$file\"!");
-    return false;
-  }
-
-  $startfftime = gmdate("H:i:s",floatval($time));
-  $lengthfftime = gmdate("H:i:s",floatval($config_array['stream']['chunk_duration']));
-
-  # Convert Start to Float
-  if ( !strpos($startfftime,'.') ) {
-    $startfftime .= '.00';
-  }
-  if ( !strpos($lengthfftime,'.') ) {
-    $lengthfftime .= '.00';
-  }
-
-  # Disable output bufferring
-  ob_end_flush();
-
-  header('Accept-Ranges: bytes');
-  header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($file)));
-  header('Content-type: audio/aac');
-
-#  $command = $config_array['applications']['ffmpeg']." -noaccurate_seek -ss ".$startfftime." -i \"".$file."\" -ss 0 -t ".$lengthfftime." -vcodec copy -vn -c:a copy -f mpegts pipe:";
-  $command = $config_array['applications']['ffmpeg']." -ss ".$startfftime." -i \"".$file."\" -t ".$lengthfftime." -filter_complex \"[0:a]avectorscope=s=1280x720:r=30:m=lissajous_xy:rf=255:gf=255:bf=255:af=255,format=yuv420p[vid]\" -map \"[vid]\" -map 0:a -c:v libx264 -preset ultrafast -c:a copy -b:v ".$config_array['stream']['video_bitrate']." -b:a ".$config_array['stream']['audio_bitrate']." -r 30 -f mpegts pipe:";
-#  $command = $config_array['applications']['ffmpeg']." -ss ".$startfftime." -i \"".$file."\" -t ".$lengthfftime." -filter_complex \"nullsrc=size=1280x720[base];[0:a]showfreqs=s=640x480:mode=line,format=yuv420p[scope1];[0:a]avectorscope=s=640x480,format=yuv420p[scope2];[base][scope1] overlay [tmp1];[tmp1][scope2] overlay [vid]\" -map \"[vid]\" -map 0:a -c:v libx264 -preset ultrafast -c:a copy -b:v ".$config_array['stream']['video_bitrate']." -b:a ".$config_array['stream']['audio_bitrate']." -r 30 -f mpegts pipe:";
-
-  error_log("[Revoku][Debug] Running External Command: '$command'");
-  passthru($command,$return_var);
-
-  if ( $return_var != 0 ) {
-    error_log("[Revoku] Error running FFMPEG, Error code $return_var!");
-    return false;
-  }
-
-  return true;
-}
-
-
 
 function stream_hls_video($file,$time = "0.00",$subtitles=false) {
 
@@ -140,7 +93,6 @@ function stream_hls_m3u8($file,$type = "video") {
   # Generate the number of whole segments we have available
   $totalwholefiles = preg_replace('/\.[0-9]+/', '', $durationsegments);
   # Generate the remaining time of the last frame in seconds if we have a remainder on the segmentation
-#  $remainingframeseconds = preg_replace('/\.[0-9]+/', '', (($durationsegments - $totalwholefiles) * floatval($config_array['stream']['chunk_duration'])));
   $remainingframeseconds = round(($durationsegments - $totalwholefiles) * floatval($config_array['stream']['chunk_duration']),2,PHP_ROUND_HALF_DOWN);
 
   # Disable Output Buffering

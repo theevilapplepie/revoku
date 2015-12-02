@@ -7,13 +7,11 @@ Function audioplayer_displayVideo(title As string, filepath As dynamic) as Boole
     video = CreateObject("roVideoScreen")
     video.setMessagePort(p)
 
-    bitrates  = [0]    
-    
     videoclip = CreateObject("roAssociativeArray")
-    videoclip.StreamBitrates = bitrates
-    videoclip.StreamUrls = [m.serverURL + "?action=stream_hls_m3u8_audio&path=" + urlobj.Escape(filepath)]
+    videoclip.StreamBitrates = [0]
+    videoclip.StreamUrls = [m.serverURL + "?action=download_file&path=" + urlobj.Escape(filepath)]
     videoclip.StreamQualities = "[HD]"
-    videoclip.StreamFormat = "hls"
+    videoclip.StreamFormat = "mp3"
     videoclip.Title = title
     
     video.SetContent(videoclip)

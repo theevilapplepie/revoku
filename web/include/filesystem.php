@@ -84,7 +84,8 @@ function pathList($path) {
 
     if ( preg_match('/\.(avi|wmv|mkv|mov|mpeg|mpg|m4v|flv|3gp|m4v|mp4)$/i', $entry) ) {
       $type = "video";
-    } elseif ( preg_match('/\.(wav|aiff|au|cdda|flac|m4a|wma|mp3|mp2|wma|aac|adf)$/i',	$entry) ) {
+#    } elseif ( preg_match('/\.(wav|aiff|au|cdda|flac|m4a|wma|mp3|mp2|wma|aac|adf)$/i',	$entry) ) {
+    } elseif ( preg_match('/\.(mp3|aac)$/i', $entry) ) {
       $type = "audio";
     } else {
       $type = "file";

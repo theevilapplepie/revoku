@@ -36,6 +36,13 @@ switch($_GET['action']) {
   case "serverinfo":
     serverinfo();
     break;
+  case "pathlist":
+    if (!pathlist($_GET['path'])) {
+      error_log("[Revoku] Action pathlist failed!");
+      header("HTTP/1.0 500 Internal Server Error");
+      exit(1);
+    }
+    break;
   case "stream_hls_m3u8":
     if (!stream_hls_m3u8($_GET['path'])) {
       error_log("[Revoku] Action stream_hls_m3u8 failed!");
@@ -43,30 +50,9 @@ switch($_GET['action']) {
       exit(1);
     }
     break;
-  case "stream_hls_m3u8_audio":
-    if (!stream_hls_m3u8($_GET['path'],"audio")) {
-      error_log("[Revoku] Action stream_hls_m3u8_audio failed!");
-      header("HTTP/1.0 500 Internal Server Error");
-      exit(1);
-    }
-    break;
-  case "stream_hls_audio":
-    if (!stream_hls_audio($_GET['path'],$_GET['time'])) {
-      error_log("[Revoku] Action stream_hls_audio failed!");
-      header("HTTP/1.0 500 Internal Server Error");
-      exit(1);
-    }
-    break;
   case "stream_hls_video":
     if (!stream_hls_video($_GET['path'],$_GET['time'])) {
       error_log("[Revoku] Action stream_hls_video failed!");
-      header("HTTP/1.0 500 Internal Server Error");
-      exit(1);
-    }
-    break;
-  case "pathlist":
-    if (!pathlist($_GET['path'])) {
-      error_log("[Revoku] Action pathlist failed!");
       header("HTTP/1.0 500 Internal Server Error");
       exit(1);
     }
@@ -84,6 +70,13 @@ switch($_GET['action']) {
       header("HTTP/1.0 500 Internal Server Error");
       exit(1);
     }
+    break;
+  case "download_file":
+    $_GET['path'] = cleanpath($_GET['path']);
+    header('Accept-Ranges: bytes');
+    header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($_GET['path'])));
+    header('Content-type: audio/mpeg');    
+    echo file_get_contents($_GET['path']);
     break;
   default:
     error_log("[Revoku] Unknown Action: ".$_GET['action']);
